@@ -8,10 +8,10 @@ import (
 )
 
 // Write a home handler function which writes a byte slice as the response body
-func home(writer http.ResponseWriter, req *http.Request) {
+func home(writer http.ResponseWriter, request *http.Request) {
 	// If request is not home then show 404 page
-	if req.URL.Path != "/" {
-		http.NotFound(writer, req)
+	if request.URL.Path != "/" {
+		http.NotFound(writer, request)
 		return
 	}
 
@@ -19,8 +19,8 @@ func home(writer http.ResponseWriter, req *http.Request) {
 }
 
 // A handler to create new snippet
-func createSnippet(writer http.ResponseWriter, req *http.Request) {
-	if req.Method != http.MethodPost {
+func createSnippet(writer http.ResponseWriter, request *http.Request) {
+	if request.Method != http.MethodPost {
 		// Set supported format for URL - Allowed methods; POST
 		writer.Header().Add("Allow", http.MethodPost)
 		http.Error(writer, "Method Not Allowed", http.StatusMethodNotAllowed)
@@ -31,15 +31,15 @@ func createSnippet(writer http.ResponseWriter, req *http.Request) {
 }
 
 // A handler to view a specific snippet
-func viewSnippet(writer http.ResponseWriter, req *http.Request) {
+func viewSnippet(writer http.ResponseWriter, request *http.Request) {
 	// Get the query params 'id' from the request
-	queryId := req.URL.Query().Get("id")
+	queryId := request.URL.Query().Get("id")
 
 	// Check if 'id' is valid - by converting from string to int
 	// or if id is not less than 0
 	id, err := strconv.Atoi(queryId)
 	if err != nil || id < 1 {
-		http.NotFound(writer, req)
+		http.NotFound(writer, request)
 		return
 	}
 
