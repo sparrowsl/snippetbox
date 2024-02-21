@@ -7,6 +7,12 @@ import (
 
 // Write a home handler function which writes a byte slice as the response body
 func home(writer http.ResponseWriter, req *http.Request) {
+	// If request is not home then show 404 page
+	if req.URL.Path != "/" {
+		http.NotFound(writer, req)
+		return
+	}
+
 	writer.Write([]byte("Hello world from snippetbox"))
 }
 
