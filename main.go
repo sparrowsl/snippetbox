@@ -18,9 +18,9 @@ func home(writer http.ResponseWriter, req *http.Request) {
 
 // A handler to create new snippet
 func createSnippet(writer http.ResponseWriter, req *http.Request) {
-	if req.Method != "POST" {
+	if req.Method != http.MethodPost {
 		// Set supported format for URL - Allowed methods; POST
-		writer.Header().Add("Allow", "POST")
+		writer.Header().Add("Allow", http.MethodPost)
 		http.Error(writer, "Method Not Allowed", http.StatusMethodNotAllowed)
 		return
 	}
