@@ -19,6 +19,7 @@ func home(writer http.ResponseWriter, request *http.Request) {
 	// List of templates files to parse
 	files := []string{
 		"./ui/html/base.html",
+		"./ui/html/partials/nav.html",
 		"./ui/html/pages/home.html",
 	}
 
