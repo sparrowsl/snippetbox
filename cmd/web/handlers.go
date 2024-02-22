@@ -2,6 +2,8 @@ package main
 
 import (
 	"fmt"
+	"html/template"
+	"log"
 	"net/http"
 	"strconv"
 )
@@ -14,7 +16,19 @@ func home(writer http.ResponseWriter, request *http.Request) {
 		return
 	}
 
-	writer.Write([]byte("Hello world from snippetbox"))
+	// read template file into a template set with template.ParseFiles()
+	temp, err := template.ParseFiles("./ui/html/pages/home.html")
+	if err != nil {
+		log.Print(err.Error())
+		http.Error(writer, "Internal Server Error", http.StatusInternalServerError)
+		return
+	}
+
+	// Use Execute() to write template as content for the response body
+	if err := temp.Execute(writer, nil); err != nil {
+		log.Print(err.Error())
+		http.Error(writer, "Internal Server Error", http.StatusInternalServerError)
+	}
 }
 
 // A handler to create new snippet
