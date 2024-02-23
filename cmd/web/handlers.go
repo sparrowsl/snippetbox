@@ -1,10 +1,13 @@
 package main
 
 import (
+	"errors"
 	"fmt"
 	"html/template"
 	"net/http"
 	"strconv"
+
+	"github.com/sparrowsl/snippetbox/internal/models"
 )
 
 // Write a home handler function which writes a byte slice as the response body
@@ -71,5 +74,15 @@ func (app *application) viewSnippet(writer http.ResponseWriter, request *http.Re
 		return
 	}
 
-	fmt.Fprintf(writer, "Displaying snippet with the id of %d", id)
+	snippet, err := app.snippets.Get(id)
+	if err != nil {
+		if errors.Is(err, models.ErrNoRecord) {
+			app.notFound(writer)
+		} else {
+			app.serverError(writer, err)
+		}
+		return
+	}
+
+	fmt.Fprintf(writer, "%+v", snippet)
 }

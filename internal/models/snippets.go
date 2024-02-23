@@ -2,6 +2,7 @@ package models
 
 import (
 	"database/sql"
+	"errors"
 	"time"
 )
 
@@ -40,12 +41,25 @@ func (model *SnippetModel) Insert(title string, content string, expires int) (in
 // Gets a specific snippet from database
 func (model *SnippetModel) Get(id int) (*Snippet, error) {
 	statement := `SELECT id, title, content, created, expires FROM snippets
-                WHERE id = ?`
+                WHERE expires > UTC_TIMESTAMP() AND id = ?`
 
 	row := model.DB.QueryRow(statement, id)
-	_ = row
+	snippet := &Snippet{}
 
-	return &Snippet{}, nil
+	// Use row.Scan() to copy the values from each field to the
+	// corresponding field in the Snippet struct.
+	// The arguments are pointers and don't return a value back.
+	err := row.Scan(&snippet.ID, &snippet.Title, &snippet.Content, &snippet.Created, &snippet.Expires)
+	if err != nil {
+		// row.Scan() will return a sql.ErrNoRows if query returns no row.
+		if errors.Is(err, sql.ErrNoRows) {
+			return nil, ErrNoRecord
+		} else {
+			return nil, err
+		}
+	}
+
+	return snippet, nil
 }
 
 // Gets the 10 most recent snippets from the database
@@ -57,6 +71,12 @@ func (model *SnippetModel) Latest() ([]*Snippet, error) {
 		return nil, err
 	}
 
-	_ = rows
+	snippet := &Snippet{}
+
+	err = rows.Scan(&snippet.ID, &snippet.Title, &snippet.Content, &snippet.Created, &snippet.Expires)
+	if err != nil {
+		return nil, err
+	}
+
 	return []*Snippet{}, nil
 }
