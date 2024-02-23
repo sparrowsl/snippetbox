@@ -3,7 +3,6 @@ package main
 import (
 	"errors"
 	"fmt"
-	"html/template"
 	"net/http"
 	"strconv"
 
@@ -12,7 +11,6 @@ import (
 
 // Write a home handler function which writes a byte slice as the response body
 func (app *application) home(writer http.ResponseWriter, request *http.Request) {
-	// If request is not home then show 404 page
 	if request.URL.Path != "/" {
 		app.notFound(writer)
 		return
@@ -24,29 +22,11 @@ func (app *application) home(writer http.ResponseWriter, request *http.Request) 
 		return
 	}
 
-	// List of templates files to parse
-	files := []string{
-		"./ui/html/base.html",
-		"./ui/html/partials/nav.html",
-		"./ui/html/pages/home.html",
-	}
-
-	// read template files into a template set with template.ParseFiles()
-	temp, err := template.ParseFiles(files...)
-	if err != nil {
-		app.serverError(writer, err)
-		return
-	}
-
-	data := TemplateData{
+	data := &TemplateData{
 		Snippets: snippets,
 	}
 
-	// Use ExecuteTemplate() to write the content of "base" as the response body
-	// Other template (html) files will inherit from the "base" template
-	if err := temp.ExecuteTemplate(writer, "base", data); err != nil {
-		app.serverError(writer, err)
-	}
+	app.render(writer, http.StatusOK, "home.html", data)
 }
 
 // A handler to create new snippet
@@ -94,26 +74,9 @@ func (app *application) viewSnippet(writer http.ResponseWriter, request *http.Re
 		return
 	}
 
-	files := []string{
-		"./ui/html/base.html",
-		"./ui/html/partials/nav.html",
-		"./ui/html/pages/view.html",
-	}
-
-	temp, err := template.ParseFiles(files...)
-	if err != nil {
-		app.serverError(writer, err)
-		return
-	}
-
-	// Use our template holder struct
 	data := &TemplateData{
 		Snippet: snippet,
 	}
 
-	err = temp.ExecuteTemplate(writer, "base", data)
-	if err != nil {
-		app.serverError(writer, err)
-		return
-	}
+	app.render(writer, http.StatusOK, "view.html", data)
 }
