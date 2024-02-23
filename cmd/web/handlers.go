@@ -106,11 +106,14 @@ func (app *application) viewSnippet(writer http.ResponseWriter, request *http.Re
 		return
 	}
 
-	err = temp.ExecuteTemplate(writer, "base", snippet)
+	// Use our template holder struct
+	data := &TemplateData{
+		Snippet: snippet,
+	}
+
+	err = temp.ExecuteTemplate(writer, "base", data)
 	if err != nil {
 		app.serverError(writer, err)
 		return
 	}
-
-	// fmt.Fprintf(writer, "%+v", snippet)
 }
