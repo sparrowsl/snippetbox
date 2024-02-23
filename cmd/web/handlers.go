@@ -22,11 +22,9 @@ func (app *application) home(writer http.ResponseWriter, request *http.Request) 
 		return
 	}
 
-	data := &TemplateData{
+	app.render(writer, http.StatusOK, "home.html", &TemplateData{
 		Snippets: snippets,
-	}
-
-	app.render(writer, http.StatusOK, "home.html", data)
+	})
 }
 
 // A handler to create new snippet
@@ -74,9 +72,7 @@ func (app *application) viewSnippet(writer http.ResponseWriter, request *http.Re
 		return
 	}
 
-	data := &TemplateData{
+	app.render(writer, http.StatusOK, "view.html", &TemplateData{
 		Snippet: snippet,
-	}
-
-	app.render(writer, http.StatusOK, "view.html", data)
+	})
 }
