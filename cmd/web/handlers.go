@@ -3,7 +3,7 @@ package main
 import (
 	"errors"
 	"fmt"
-	// "html/template"
+	"html/template"
 	"net/http"
 	"strconv"
 
@@ -94,5 +94,23 @@ func (app *application) viewSnippet(writer http.ResponseWriter, request *http.Re
 		return
 	}
 
-	fmt.Fprintf(writer, "%+v", snippet)
+	files := []string{
+		"./ui/html/base.html",
+		"./ui/html/partials/nav.html",
+		"./ui/html/pages/view.html",
+	}
+
+	temp, err := template.ParseFiles(files...)
+	if err != nil {
+		app.serverError(writer, err)
+		return
+	}
+
+	err = temp.ExecuteTemplate(writer, "base", snippet)
+	if err != nil {
+		app.serverError(writer, err)
+		return
+	}
+
+	// fmt.Fprintf(writer, "%+v", snippet)
 }
