@@ -8,7 +8,7 @@
   <title>{{template "title" .}} - Snippetbox</title>
   <link rel="shortcut icon" type="image/x-icon" href="/static/img/favicon.ico">
   <link rel="stylesheet" href="/static/css/main.css">
-  <link defer href="/static/js/main.js">
+  <script defer src="/static/js/main.js"></script>
 </head>
 
 <body>
@@ -22,8 +22,12 @@
   </main>
 
   <footer>
-    Powered by <a href="https://go.dev">Go</a>
+    Powered by <a href="https://go.dev">Go</a> in <span id="currentYear"></span>
   </footer>
+
+  <script>
+    document.getElementById("currentYear").textContent = new Date().getFullYear()
+  </script>
 </body>
 
 </html>
