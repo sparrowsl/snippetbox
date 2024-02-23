@@ -3,7 +3,7 @@ package main
 import (
 	"errors"
 	"fmt"
-	"html/template"
+	// "html/template"
 	"net/http"
 	"strconv"
 
@@ -18,25 +18,35 @@ func (app *application) home(writer http.ResponseWriter, request *http.Request) 
 		return
 	}
 
-	// List of templates files to parse
-	files := []string{
-		"./ui/html/base.html",
-		"./ui/html/partials/nav.html",
-		"./ui/html/pages/home.html",
-	}
-
-	// read template files into a template set with template.ParseFiles()
-	temp, err := template.ParseFiles(files...)
+	snippets, err := app.snippets.Latest()
 	if err != nil {
 		app.serverError(writer, err)
 		return
 	}
 
-	// Use ExecuteTemplate() to write the content of "base" as the response body
-	// Other template (html) files will inherit from the "base" template
-	if err := temp.ExecuteTemplate(writer, "base", nil); err != nil {
-		app.serverError(writer, err)
+	for _, snippet := range snippets {
+		fmt.Fprintf(writer, "%+v\n", snippet)
 	}
+	//
+	// // List of templates files to parse
+	// files := []string{
+	// 	"./ui/html/base.html",
+	// 	"./ui/html/partials/nav.html",
+	// 	"./ui/html/pages/home.html",
+	// }
+	//
+	// // read template files into a template set with template.ParseFiles()
+	// temp, err := template.ParseFiles(files...)
+	// if err != nil {
+	// 	app.serverError(writer, err)
+	// 	return
+	// }
+	//
+	// // Use ExecuteTemplate() to write the content of "base" as the response body
+	// // Other template (html) files will inherit from the "base" template
+	// if err := temp.ExecuteTemplate(writer, "base", nil); err != nil {
+	// 	app.serverError(writer, err)
+	// }
 }
 
 // A handler to create new snippet
