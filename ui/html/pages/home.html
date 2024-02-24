@@ -1,11 +1,11 @@
-{{define "title"}}
+{{ define "title" }}
 Home
-{{end}}
+{{ end }}
 
-{{define "main"}}
+{{ define "main" }}
 <h2>Latest Snippets</h2>
 
-{{if .Snippets}}
+{{ if .Snippets }}
 <table>
   <thead>
     <tr>
@@ -16,16 +16,16 @@ Home
   </thead>
 
   <tbody>
-    {{range .Snippets}}
+    {{ range .Snippets }}
     <tr>
       <td><a href="/snippet/view?id={{.ID}}">{{.Title}}</a></td>
-      <td>{{.Created}}</td>
-      <td>#{{.ID}}</td>
+      <td>{{ .Created }}</td>
+      <td>#{{ .ID }}</td>
     </tr>
-    {{end}}
+    {{ end }}
   </tbody>
 </table>
-{{else}}
+{{ else }}
 <p>There's nothing to see here yet!</p>
-{{end}}
-{{end}}
+{{ end }}
+{{ end }}
