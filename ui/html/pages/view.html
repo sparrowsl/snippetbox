@@ -12,8 +12,8 @@ Snippet #{{ .Snippet.ID }}
   <pre><code>{{ .Snippet.Content }}</code></pre>
 
   <div class="metadata">
-    <time>Created: {{ .Snippet.Created }}</time>
-    <time>Expires: {{ .Snippet.Expires }}</time>
+    <time>Created: <span data-custom-date>{{ .Snippet.Created }}</span></time>
+    <time>Expires: <span data-custom-date>{{ .Snippet.Expires }}</span></time>
   </div>
 </div>
 {{ end }}
