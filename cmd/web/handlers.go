@@ -12,11 +12,6 @@ import (
 
 // Write a home handler function which writes a byte slice as the response body
 func (app *application) home(writer http.ResponseWriter, request *http.Request) {
-	if request.URL.Path != "/" {
-		app.notFound(writer)
-		return
-	}
-
 	snippets, err := app.snippets.Latest()
 	if err != nil {
 		app.serverError(writer, err)
@@ -28,14 +23,13 @@ func (app *application) home(writer http.ResponseWriter, request *http.Request) 
 	})
 }
 
-// A handler to create new snippet
+// A handler to display form to create snippets
 func (app *application) createSnippet(writer http.ResponseWriter, request *http.Request) {
-	if request.Method != http.MethodPost {
-		writer.Header().Add("Allow", http.MethodPost)
-		app.clientError(writer, http.StatusMethodNotAllowed)
-		return
-	}
+	writer.Write([]byte("Display the form for creating snippets..."))
+}
 
+// A handler to create new snippet
+func (app *application) createSnippetPost(writer http.ResponseWriter, request *http.Request) {
 	title := "O snail"
 	content := "O snail\nClimb Mount Fuji,\nBut slowly, slowly!\n\n– Kobayashi Issa"
 	expires := 7
