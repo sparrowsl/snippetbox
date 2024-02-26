@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"strconv"
 
+	"github.com/go-chi/chi/v5"
 	"github.com/sparrowsl/snippetbox/internal/models"
 )
 
@@ -30,7 +31,6 @@ func (app *application) home(writer http.ResponseWriter, request *http.Request) 
 // A handler to create new snippet
 func (app *application) createSnippet(writer http.ResponseWriter, request *http.Request) {
 	if request.Method != http.MethodPost {
-		// Set supported format for URL - Allowed methods; POST
 		writer.Header().Add("Allow", http.MethodPost)
 		app.clientError(writer, http.StatusMethodNotAllowed)
 		return
@@ -46,16 +46,13 @@ func (app *application) createSnippet(writer http.ResponseWriter, request *http.
 		return
 	}
 
-	http.Redirect(writer, request, fmt.Sprintf("/snippet/view?id=%d", id), http.StatusSeeOther)
+	http.Redirect(writer, request, fmt.Sprintf("/snippet/view/%d", id), http.StatusSeeOther)
 }
 
 // A handler to view a specific snippet
 func (app *application) viewSnippet(writer http.ResponseWriter, request *http.Request) {
-	// Get the query params 'id' from the request
-	queryId := request.URL.Query().Get("id")
+	queryId := chi.URLParam(request, "id")
 
-	// Check if 'id' is valid - by converting from string to int
-	// or if id is not less than 0
 	id, err := strconv.Atoi(queryId)
 	if err != nil || id < 1 {
 		app.notFound(writer)
