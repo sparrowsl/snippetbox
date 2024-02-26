@@ -22,7 +22,8 @@ func (app *application) routes() http.Handler {
 	// group snippet routes
 	router.Route("/snippet", func(r chi.Router) {
 		r.Get("/view/{id}", app.viewSnippet)
-		r.Post("/create", app.createSnippet)
+		r.Get("/create", app.createSnippet)
+		r.Post("/create", app.createSnippetPost)
 	})
 
 	return router
