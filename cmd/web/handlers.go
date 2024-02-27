@@ -25,7 +25,7 @@ func (app *application) home(writer http.ResponseWriter, request *http.Request) 
 
 // A handler to display form to create snippets
 func (app *application) createSnippet(writer http.ResponseWriter, request *http.Request) {
-	writer.Write([]byte("Display the form for creating snippets..."))
+	app.render(writer, http.StatusOK, "create.html", nil)
 }
 
 // A handler to create new snippet
