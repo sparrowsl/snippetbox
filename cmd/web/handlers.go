@@ -30,9 +30,20 @@ func (app *application) createSnippet(writer http.ResponseWriter, request *http.
 
 // A handler to create new snippet
 func (app *application) createSnippetPost(writer http.ResponseWriter, request *http.Request) {
-	title := "O snail"
-	content := "O snail\nClimb Mount Fuji,\nBut slowly, slowly!\n\n– Kobayashi Issa"
-	expires := 7
+	// parse form data
+	if err := request.ParseForm(); err != nil {
+		app.clientError(writer, http.StatusBadRequest)
+		return
+	}
+
+	title := request.PostForm.Get("title")
+	content := request.PostForm.Get("content")
+	expires, err := strconv.Atoi(request.PostForm.Get("expires"))
+
+	if err != nil {
+		app.clientError(writer, http.StatusBadRequest)
+		return
+	}
 
 	id, err := app.snippets.Insert(title, content, expires)
 	if err != nil {
