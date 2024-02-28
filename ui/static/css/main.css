@@ -216,6 +216,10 @@ form label {
   border-width: 2px !important;
 }
 
+.block {
+  display: block;
+}
+
 textarea {
   padding: 18px;
   width: 100%;

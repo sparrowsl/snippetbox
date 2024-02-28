@@ -6,11 +6,17 @@ Create a New Snippet
 <form action="/snippet/create" method="post">
   <div>
     <label for="title">Title:</label>
+    {{ with .Errors.title }}
+    <small class="error block">{{.}}</small>
+    {{ end }}
     <input type="text" name="title" id="title" required>
   </div>
 
   <div>
     <label for="content">Content</label>
+    {{ with .Errors.content }}
+    <small class="error block">{{.}}</small>
+    {{ end }}
     <textarea id="content" name="content" required></textarea>
   </div>
 
@@ -21,9 +27,6 @@ Create a New Snippet
     <input type="radio" name="expires" value="1"> One Day
   </div>
 
-  <div>
-    <button type="submit">Publish Snippet</button>
-  </div>
-  </fieldset>
+  <button type="submit" class="block">Publish Snippet</button>
 </form>
 {{ end }}

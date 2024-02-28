@@ -26,7 +26,9 @@ func (app *application) home(writer http.ResponseWriter, request *http.Request) 
 
 // A handler to display form to create snippets
 func (app *application) createSnippet(writer http.ResponseWriter, request *http.Request) {
-	app.render(writer, http.StatusOK, "create.html", nil)
+	app.render(writer, http.StatusOK, "create.html", &TemplateData{
+		Errors: map[string]string{},
+	})
 }
 
 // A handler to create new snippet
@@ -54,7 +56,9 @@ func (app *application) createSnippetPost(writer http.ResponseWriter, request *h
 	val.CheckField(validator.PermittedInt(expires, 7, 1, 365), "expires", "This field must be equal 1, 7, or 365")
 
 	if !val.Valid() {
-		fmt.Fprint(writer, val.FieldErrors)
+		app.render(writer, http.StatusBadRequest, "create.html", &TemplateData{
+			Errors: val.FieldErrors,
+		})
 		return
 	}
 
