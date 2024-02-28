@@ -13,6 +13,7 @@ func (app *application) routes() http.Handler {
 	router.Use(middleware.Logger)
 	router.Use(middleware.Recoverer)
 	router.Use(secureHeaders)
+	router.Use(app.sessionManager.LoadAndSave)
 
 	fileServer := http.FileServer(http.Dir("./ui/static/"))
 	router.Handle("/*", http.StripPrefix("/static/", fileServer))
