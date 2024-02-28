@@ -57,9 +57,12 @@ func main() {
 	}
 
 	server := &http.Server{
-		Addr:     *address,
-		Handler:  app.routes(),
-		ErrorLog: app.errorLog,
+		Addr:         *address,
+		Handler:      app.routes(),
+		ErrorLog:     app.errorLog,
+		IdleTimeout:  time.Minute,
+		ReadTimeout:  time.Second * 5,
+		WriteTimeout: time.Second * 10,
 	}
 
 	infoLog.Printf("Starting server on port %s", *address)
