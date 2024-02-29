@@ -113,14 +113,14 @@ func (app *application) userSignUpPost(writer http.ResponseWriter, request *http
 		return
 	}
 
-	username := request.PostForm.Get("username")
+	name := request.PostForm.Get("name")
 	password := request.PostForm.Get("password")
 
 	// validate form data
 	val := validator.Validator{}
 
-	val.CheckField(validator.MaxChars(username, 30), "username", "This field must be less than 30 characters")
-	val.CheckField(validator.NotBlank(username), "username", "This field must not be empty")
+	val.CheckField(validator.MaxChars(name, 30), "name", "This field must be less than 30 characters")
+	val.CheckField(validator.NotBlank(name), "name", "This field must not be empty")
 	val.CheckField(validator.NotBlank(password), "password", "This field must not be empty")
 
 	if !val.Valid() {
@@ -143,14 +143,14 @@ func (app *application) userLoginPost(writer http.ResponseWriter, request *http.
 		return
 	}
 
-	username := request.PostForm.Get("username")
+	name := request.PostForm.Get("name")
 	password := request.PostForm.Get("password")
 
 	// validate form data
 	val := validator.Validator{}
 
-	val.CheckField(validator.MaxChars(username, 30), "username", "This field must be less than 30 characters")
-	val.CheckField(validator.NotBlank(username), "username", "This field must not be empty")
+	val.CheckField(validator.MaxChars(name, 30), "name", "This field must be less than 30 characters")
+	val.CheckField(validator.NotBlank(name), "name", "This field must not be empty")
 	val.CheckField(validator.NotBlank(password), "password", "This field must not be empty")
 
 	if !val.Valid() {
