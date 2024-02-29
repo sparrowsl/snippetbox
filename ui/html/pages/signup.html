@@ -1,0 +1,33 @@
+{{ define "title" }}
+Signup
+{{ end }}
+
+{{ define "main" }}
+<form action="/user/signup" method="post" novalidate>
+  <div>
+    <label>Name:</label>
+    {{ with .Errors.name }}
+    <p class="error">{{.}}</p>
+    {{ end }}
+    <input type="text" name="name" required>
+  </div>
+
+  <div>
+    <label>Email:</label>
+    {{ with .Errors.email }}
+    <p class="error">{{.}}</p>
+    {{ end }}
+    <input type="email" name="email" required>
+  </div>
+
+  <div>
+    <label>Password:</label>
+    {{ with .Errors.password }}
+    <p class="error">{{.}}</p>
+    {{ end }}
+    <input type="password" name="password" required>
+  </div>
+
+  <button type="submit" class="block">Signup</button>
+</form>
+{{ end }}
