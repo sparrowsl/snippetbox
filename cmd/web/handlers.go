@@ -100,3 +100,65 @@ func (app *application) viewSnippet(writer http.ResponseWriter, request *http.Re
 		Flash:   flash,
 	})
 }
+
+func (app *application) userSignUp(writer http.ResponseWriter, request *http.Request) {
+	app.render(writer, http.StatusOK, "signup.html", &TemplateData{
+		Errors: map[string]string{},
+	})
+}
+
+func (app *application) userSignUpPost(writer http.ResponseWriter, request *http.Request) {
+	if err := request.ParseForm(); err != nil {
+		app.clientError(writer, http.StatusBadRequest)
+		return
+	}
+
+	username := request.PostForm.Get("username")
+	password := request.PostForm.Get("password")
+
+	// validate form data
+	val := validator.Validator{}
+
+	val.CheckField(validator.MaxChars(username, 30), "username", "This field must be less than 30 characters")
+	val.CheckField(validator.NotBlank(username), "username", "This field must not be empty")
+	val.CheckField(validator.NotBlank(password), "password", "This field must not be empty")
+
+	if !val.Valid() {
+		app.render(writer, http.StatusOK, "signup.html", &TemplateData{
+			Errors: val.FieldErrors,
+		})
+		return
+	}
+}
+
+func (app *application) userLogin(writer http.ResponseWriter, request *http.Request) {
+	app.render(writer, http.StatusOK, "login.html", &TemplateData{
+		Errors: map[string]string{},
+	})
+}
+
+func (app *application) userLoginPost(writer http.ResponseWriter, request *http.Request) {
+	if err := request.ParseForm(); err != nil {
+		app.clientError(writer, http.StatusBadRequest)
+		return
+	}
+
+	username := request.PostForm.Get("username")
+	password := request.PostForm.Get("password")
+
+	// validate form data
+	val := validator.Validator{}
+
+	val.CheckField(validator.MaxChars(username, 30), "username", "This field must be less than 30 characters")
+	val.CheckField(validator.NotBlank(username), "username", "This field must not be empty")
+	val.CheckField(validator.NotBlank(password), "password", "This field must not be empty")
+
+	if !val.Valid() {
+		app.render(writer, http.StatusBadRequest, "login.html", &TemplateData{
+			Errors: val.FieldErrors,
+		})
+		return
+	}
+}
+
+func (app *application) userLogout(writer http.ResponseWriter, request *http.Request) {}

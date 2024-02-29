@@ -27,5 +27,14 @@ func (app *application) routes() http.Handler {
 		r.Post("/create", app.createSnippetPost)
 	})
 
+	// group user routes
+	router.Route("/user", func(r chi.Router) {
+		r.Get("/signup", app.userSignUp)
+		r.Post("/signup", app.userSignUpPost)
+		r.Get("/login", app.userLogin)
+		r.Post("/login", app.userLoginPost)
+		r.Post("/logout", app.userLogout)
+	})
+
 	return router
 }
