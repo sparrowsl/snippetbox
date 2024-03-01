@@ -25,7 +25,7 @@ Signup
     {{ with .Errors.password }}
     <p class="error">{{.}}</p>
     {{ end }}
-    <input type="password" name="password" required>
+    <input type="password" name="password" minlength="8" required>
   </div>
 
   <button type="submit" class="block">Signup</button>

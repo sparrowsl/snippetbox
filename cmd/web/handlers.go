@@ -56,7 +56,7 @@ func (app *application) createSnippetPost(writer http.ResponseWriter, request *h
 	val.CheckField(validator.PermittedInt(expires, 7, 1, 365), "expires", "This field must be equal 1, 7, or 365")
 
 	if !val.Valid() {
-		app.render(writer, http.StatusBadRequest, "create.html", &TemplateData{
+		app.render(writer, http.StatusUnprocessableEntity, "create.html", &TemplateData{
 			Errors: val.FieldErrors,
 		})
 		return
@@ -114,21 +114,29 @@ func (app *application) userSignUpPost(writer http.ResponseWriter, request *http
 	}
 
 	name := request.PostForm.Get("name")
+	email := request.PostForm.Get("email")
 	password := request.PostForm.Get("password")
 
 	// validate form data
 	val := validator.Validator{}
 
-	val.CheckField(validator.MaxChars(name, 30), "name", "This field must be less than 30 characters")
-	val.CheckField(validator.NotBlank(name), "name", "This field must not be empty")
+	val.CheckField(validator.NotBlank(name), "name", "This field must be less than 30 characters")
+	val.CheckField(validator.NotBlank(email), "email", "This field must not be empty")
+	val.CheckField(validator.Matches(email, validator.EmailRegex), "email", "This field must be a valid email address")
 	val.CheckField(validator.NotBlank(password), "password", "This field must not be empty")
+	val.CheckField(validator.MinChars(password, 8), "password", "This field must be at least 8 characters long")
 
 	if !val.Valid() {
-		app.render(writer, http.StatusOK, "signup.html", &TemplateData{
+		app.render(writer, http.StatusUnprocessableEntity, "signup.html", &TemplateData{
 			Errors: val.FieldErrors,
 		})
 		return
 	}
+
+	// send a flash message for now
+	app.render(writer, http.StatusOK, "signup.html", &TemplateData{
+		Flash: "User successfully created!!",
+	})
 }
 
 func (app *application) userLogin(writer http.ResponseWriter, request *http.Request) {
@@ -154,7 +162,7 @@ func (app *application) userLoginPost(writer http.ResponseWriter, request *http.
 	val.CheckField(validator.NotBlank(password), "password", "This field must not be empty")
 
 	if !val.Valid() {
-		app.render(writer, http.StatusBadRequest, "login.html", &TemplateData{
+		app.render(writer, http.StatusUnprocessableEntity, "login.html", &TemplateData{
 			Errors: val.FieldErrors,
 		})
 		return
