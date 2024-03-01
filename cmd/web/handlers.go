@@ -133,10 +133,20 @@ func (app *application) userSignUpPost(writer http.ResponseWriter, request *http
 		return
 	}
 
-	// send a flash message for now
-	app.render(writer, http.StatusOK, "signup.html", &TemplateData{
-		Flash: "User successfully created!!",
-	})
+	err := app.users.Insert(name, email, password)
+	if err != nil {
+		if errors.Is(err, models.ErrDuplicateEmail) {
+			val.AddFieldError("email", "Email address is already in use")
+			app.render(writer, http.StatusUnprocessableEntity, "signup.html", &TemplateData{
+				Errors: val.FieldErrors,
+			})
+		} else {
+			app.serverError(writer, err)
+		}
+	}
+
+	app.sessionManager.Put(request.Context(), "flash", "Your signup was successfully, please log in!")
+	http.Redirect(writer, request, "/user/login", http.StatusSeeOther)
 }
 
 func (app *application) userLogin(writer http.ResponseWriter, request *http.Request) {
