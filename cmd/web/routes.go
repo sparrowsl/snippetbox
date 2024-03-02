@@ -23,8 +23,12 @@ func (app *application) routes() http.Handler {
 	// group snippet routes
 	router.Route("/snippet", func(r chi.Router) {
 		r.Get("/view/{id}", app.viewSnippet)
-		r.Get("/create", app.createSnippet)
-		r.Post("/create", app.createSnippetPost)
+
+		r.Group(func(r chi.Router) {
+			r.Use(app.requireAuthentication)
+			r.Get("/create", app.createSnippet)
+			r.Post("/create", app.createSnippetPost)
+		})
 	})
 
 	// group user routes
@@ -33,7 +37,11 @@ func (app *application) routes() http.Handler {
 		r.Post("/signup", app.userSignUpPost)
 		r.Get("/login", app.userLogin)
 		r.Post("/login", app.userLoginPost)
-		r.Post("/logout", app.userLogout)
+
+		r.Group(func(r chi.Router) {
+			r.Use(app.requireAuthentication)
+			r.Post("/logout", app.userLogout)
+		})
 	})
 
 	return router
