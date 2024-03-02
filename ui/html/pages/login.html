@@ -4,6 +4,10 @@ Login
 
 {{ define "main" }}
 <form action="/user/login" method="post" novalidate>
+  {{ range .Errors }}
+  <p>{{.}}</p>
+  {{ end }}
+
   <div>
     <label>Name:</label>
     {{ with .Errors.name }}
