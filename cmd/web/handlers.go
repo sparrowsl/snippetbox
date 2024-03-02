@@ -177,6 +177,27 @@ func (app *application) userLoginPost(writer http.ResponseWriter, request *http.
 		})
 		return
 	}
+
+	id, err := app.users.Authenticate(email, password)
+	if err != nil {
+		if errors.Is(err, models.ErrInvalidCredentials) {
+			val.AddNonFieldError("Email or Password is incorrect")
+			app.render(writer, http.StatusUnprocessableEntity, "login.html", &TemplateData{
+				Errors: val.FieldErrors,
+			})
+		} else {
+			app.serverError(writer, err)
+		}
+		return
+	}
+
+	if err := app.sessionManager.RenewToken(request.Context()); err != nil {
+		app.serverError(writer, err)
+		return
+	}
+
+	app.sessionManager.Put(request.Context(), "authenticatedUserID", id)
+	http.Redirect(writer, request, "/snippet/create", http.StatusSeeOther)
 }
 
 func (app *application) userLogout(writer http.ResponseWriter, request *http.Request) {}

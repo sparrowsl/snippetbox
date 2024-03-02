@@ -9,11 +9,11 @@ Login
   {{ end }}
 
   <div>
-    <label>Name:</label>
-    {{ with .Errors.name }}
+    <label>Email:</label>
+    {{ with .Errors.email }}
     <p class="error">{{.}}</p>
     {{ end }}
-    <input type="text" name="name" required>
+    <input type="email" name="email" required>
   </div>
 
   <div>
