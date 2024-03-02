@@ -4,6 +4,8 @@ Login
 
 {{ define "main" }}
 <form action="/user/login" method="post" novalidate>
+  <input type="hidden" name="csrf_token" value="{{ .CSRFToken }}">
+
   {{ range .Errors }}
   <p>{{.}}</p>
   {{ end }}

@@ -4,6 +4,8 @@ Create a New Snippet
 
 {{ define "main" }}
 <form action="/snippet/create" method="post">
+  <input type="hidden" name="csrf_token" value="{{ .CSRFToken }}">
+
   <div>
     <label for="title">Title:</label>
     {{ with .Errors.title }}

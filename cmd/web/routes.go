@@ -22,7 +22,7 @@ func (app *application) routes() http.Handler {
 
 	// group snippet routes
 	router.Route("/snippet", func(r chi.Router) {
-		// r.Use(app.noSurf)
+		r.Use(app.noSurf)
 
 		r.Get("/view/{id}", app.viewSnippet)
 
@@ -35,7 +35,7 @@ func (app *application) routes() http.Handler {
 
 	// group user routes
 	router.Route("/user", func(r chi.Router) {
-		// r.Use(app.noSurf)
+		r.Use(app.noSurf)
 
 		r.Get("/signup", app.userSignUp)
 		r.Post("/signup", app.userSignUpPost)

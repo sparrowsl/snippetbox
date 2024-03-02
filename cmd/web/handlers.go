@@ -7,6 +7,7 @@ import (
 	"strconv"
 
 	"github.com/go-chi/chi/v5"
+	"github.com/justinas/nosurf"
 	"github.com/sparrowsl/snippetbox/internal/models"
 	"github.com/sparrowsl/snippetbox/internal/validator"
 )
@@ -30,6 +31,7 @@ func (app *application) createSnippet(writer http.ResponseWriter, request *http.
 	app.render(writer, http.StatusOK, "create.html", &TemplateData{
 		Errors:          map[string]string{},
 		IsAuthenticated: app.Authenticate(request),
+		CSRFToken:       nosurf.Token(request),
 	})
 }
 
@@ -59,7 +61,8 @@ func (app *application) createSnippetPost(writer http.ResponseWriter, request *h
 
 	if !val.Valid() {
 		app.render(writer, http.StatusUnprocessableEntity, "create.html", &TemplateData{
-			Errors: val.FieldErrors,
+			Errors:    val.FieldErrors,
+			CSRFToken: nosurf.Token(request),
 		})
 		return
 	}
@@ -101,6 +104,7 @@ func (app *application) viewSnippet(writer http.ResponseWriter, request *http.Re
 		Snippet:         snippet,
 		Flash:           flash,
 		IsAuthenticated: app.Authenticate(request),
+		CSRFToken:       nosurf.Token(request),
 	})
 }
 
@@ -108,6 +112,7 @@ func (app *application) userSignUp(writer http.ResponseWriter, request *http.Req
 	app.render(writer, http.StatusOK, "signup.html", &TemplateData{
 		Errors:          map[string]string{},
 		IsAuthenticated: app.Authenticate(request),
+		CSRFToken:       nosurf.Token(request),
 	})
 }
 
@@ -132,7 +137,8 @@ func (app *application) userSignUpPost(writer http.ResponseWriter, request *http
 
 	if !val.Valid() {
 		app.render(writer, http.StatusUnprocessableEntity, "signup.html", &TemplateData{
-			Errors: val.FieldErrors,
+			Errors:    val.FieldErrors,
+			CSRFToken: nosurf.Token(request),
 		})
 		return
 	}
@@ -142,7 +148,8 @@ func (app *application) userSignUpPost(writer http.ResponseWriter, request *http
 		if errors.Is(err, models.ErrDuplicateEmail) {
 			val.AddFieldError("email", "Email address is already in use")
 			app.render(writer, http.StatusUnprocessableEntity, "signup.html", &TemplateData{
-				Errors: val.FieldErrors,
+				Errors:    val.FieldErrors,
+				CSRFToken: nosurf.Token(request),
 			})
 		} else {
 			app.serverError(writer, err)
@@ -157,6 +164,7 @@ func (app *application) userLogin(writer http.ResponseWriter, request *http.Requ
 	app.render(writer, http.StatusOK, "login.html", &TemplateData{
 		Errors:          map[string]string{},
 		IsAuthenticated: app.Authenticate(request),
+		CSRFToken:       nosurf.Token(request),
 	})
 }
 
@@ -178,7 +186,8 @@ func (app *application) userLoginPost(writer http.ResponseWriter, request *http.
 
 	if !val.Valid() {
 		app.render(writer, http.StatusUnprocessableEntity, "login.html", &TemplateData{
-			Errors: val.FieldErrors,
+			Errors:    val.FieldErrors,
+			CSRFToken: nosurf.Token(request),
 		})
 		return
 	}
@@ -188,7 +197,8 @@ func (app *application) userLoginPost(writer http.ResponseWriter, request *http.
 		if errors.Is(err, models.ErrInvalidCredentials) {
 			val.AddNonFieldError("Email or Password is incorrect")
 			app.render(writer, http.StatusUnprocessableEntity, "login.html", &TemplateData{
-				Errors: val.FieldErrors,
+				Errors:    val.FieldErrors,
+				CSRFToken: nosurf.Token(request),
 			})
 		} else {
 			app.serverError(writer, err)
