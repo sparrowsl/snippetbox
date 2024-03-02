@@ -72,14 +72,15 @@ func (model *UserModel) Authenticate(email string, pass string) (int, error) {
 	return id, nil
 }
 
-func (model *UserModel) Exists(id int) bool {
+func (model *UserModel) Exists(id int) (bool, error) {
+	var exists bool
+
 	statement := `SELECT id FROM users WHERE id = ?`
-	result, err := model.DB.Exec(statement, id)
-	if err != nil {
-		return false
+
+	result := model.DB.QueryRow(statement, id)
+	if err := result.Scan(&exists); err != nil {
+		return false, err
 	}
 
-	result.LastInsertId()
-
-	return false
+	return true, nil
 }

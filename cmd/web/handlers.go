@@ -198,6 +198,7 @@ func (app *application) userLoginPost(writer http.ResponseWriter, request *http.
 			val.AddNonFieldError("Email or Password is incorrect")
 			app.render(writer, http.StatusUnprocessableEntity, "login.html", &TemplateData{
 				Errors:    val.FieldErrors,
+				Flash:     val.NonFieldErrors[0],
 				CSRFToken: nosurf.Token(request),
 			})
 		} else {
@@ -212,6 +213,7 @@ func (app *application) userLoginPost(writer http.ResponseWriter, request *http.
 	}
 
 	app.sessionManager.Put(request.Context(), "authenticatedUserID", id)
+
 	http.Redirect(writer, request, "/snippet/create", http.StatusSeeOther)
 }
 
