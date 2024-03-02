@@ -43,3 +43,7 @@ func (app *application) render(writer http.ResponseWriter, status int, page stri
 	writer.WriteHeader(status)
 	buffer.WriteTo(writer)
 }
+
+func (app *application) Authenticate(request *http.Request) bool {
+	return app.sessionManager.Exists(request.Context(), "authenticatedUserID")
+}

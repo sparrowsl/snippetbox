@@ -9,10 +9,11 @@ import (
 
 // Acts as a holding structure for any dynamic data to pass in our templates
 type TemplateData struct {
-	Snippet  *models.Snippet
-	Snippets []*models.Snippet
-	Errors   map[string]string
-	Flash    string
+	Snippet         *models.Snippet
+	Snippets        []*models.Snippet
+	Errors          map[string]string
+	Flash           string
+	IsAuthenticated bool
 }
 
 func newTemplateCache() (map[string]*template.Template, error) {

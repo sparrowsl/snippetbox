@@ -20,14 +20,16 @@ func (app *application) home(writer http.ResponseWriter, request *http.Request) 
 	}
 
 	app.render(writer, http.StatusOK, "home.html", &TemplateData{
-		Snippets: snippets,
+		Snippets:        snippets,
+		IsAuthenticated: app.Authenticate(request),
 	})
 }
 
 // A handler to display form to create snippets
 func (app *application) createSnippet(writer http.ResponseWriter, request *http.Request) {
 	app.render(writer, http.StatusOK, "create.html", &TemplateData{
-		Errors: map[string]string{},
+		Errors:          map[string]string{},
+		IsAuthenticated: app.Authenticate(request),
 	})
 }
 
@@ -96,14 +98,16 @@ func (app *application) viewSnippet(writer http.ResponseWriter, request *http.Re
 	flash := app.sessionManager.PopString(request.Context(), "flash")
 
 	app.render(writer, http.StatusOK, "view.html", &TemplateData{
-		Snippet: snippet,
-		Flash:   flash,
+		Snippet:         snippet,
+		Flash:           flash,
+		IsAuthenticated: app.Authenticate(request),
 	})
 }
 
 func (app *application) userSignUp(writer http.ResponseWriter, request *http.Request) {
 	app.render(writer, http.StatusOK, "signup.html", &TemplateData{
-		Errors: map[string]string{},
+		Errors:          map[string]string{},
+		IsAuthenticated: app.Authenticate(request),
 	})
 }
 
@@ -151,7 +155,8 @@ func (app *application) userSignUpPost(writer http.ResponseWriter, request *http
 
 func (app *application) userLogin(writer http.ResponseWriter, request *http.Request) {
 	app.render(writer, http.StatusOK, "login.html", &TemplateData{
-		Errors: map[string]string{},
+		Errors:          map[string]string{},
+		IsAuthenticated: app.Authenticate(request),
 	})
 }
 
