@@ -57,7 +57,7 @@ func (app *application) createSnippetPost(writer http.ResponseWriter, request *h
 	val.CheckField(validator.NotBlank(title), "title", "This field cannot be blank")
 	val.CheckField(validator.MaxChars(title, 100), "title", "This field cannot be more than 100 characters long")
 	val.CheckField(validator.NotBlank(content), "content", "This field cannot be blank")
-	val.CheckField(validator.PermittedInt(expires, 7, 1, 365), "expires", "This field must be equal 1, 7, or 365")
+	val.CheckField(validator.PermittedValues(expires, 7, 1, 365), "expires", "This field must be equal 1, 7, or 365")
 
 	if !val.Valid() {
 		app.render(writer, http.StatusUnprocessableEntity, "create.html", &TemplateData{
