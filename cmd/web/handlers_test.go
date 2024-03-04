@@ -10,21 +10,23 @@ import (
 	"github.com/sparrowsl/snippetbox/internal/assert"
 )
 
-func TestNormalPing(t *testing.T) {
-	rr := httptest.NewRecorder()
+func TestPing(t *testing.T) {
 
-	req, err := http.NewRequest(http.MethodGet, "/", nil)
+	app := &application{
+		// errorLog: log.New(io.Discard, "", 0),
+		// infoLog:  log.New(io.Discard, "", 0),
+	}
+
+	ts := httptest.NewServer(app.routes())
+	defer ts.Close()
+
+	result, err := ts.Client().Get(ts.URL + "/ping")
 	if err != nil {
 		t.Fatal(err)
 	}
-
-	ping(rr, req)
-
-	result := rr.Result()
+	defer result.Body.Close()
 
 	assert.Equal(t, result.StatusCode, http.StatusOK)
-
-	defer result.Body.Close()
 
 	body, err := io.ReadAll(result.Body)
 	if err != nil {
