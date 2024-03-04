@@ -19,7 +19,7 @@ func (app *application) routes() http.Handler {
 	router.Handle("/*", http.StripPrefix("/static/", fileServer))
 
 	router.Get("/", app.home)
-	router.Get("/ping", ping)
+	router.Get("/about", app.about)
 
 	// group snippet routes
 	router.Route("/snippet", func(r chi.Router) {

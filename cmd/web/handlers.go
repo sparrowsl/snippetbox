@@ -12,8 +12,10 @@ import (
 	"github.com/sparrowsl/snippetbox/internal/validator"
 )
 
-func ping(writer http.ResponseWriter, request *http.Request) {
-	writer.Write([]byte("OK"))
+func (app *application) about(writer http.ResponseWriter, request *http.Request) {
+	app.render(writer, http.StatusOK, "about.html", &TemplateData{
+		IsAuthenticated: app.Authenticate(request),
+	})
 }
 
 // Write a home handler function which writes a byte slice as the response body
