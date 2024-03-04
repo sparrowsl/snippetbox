@@ -12,6 +12,10 @@ import (
 	"github.com/sparrowsl/snippetbox/internal/validator"
 )
 
+func ping(writer http.ResponseWriter, request *http.Request) {
+	writer.Write([]byte("OK"))
+}
+
 // Write a home handler function which writes a byte slice as the response body
 func (app *application) home(writer http.ResponseWriter, request *http.Request) {
 	snippets, err := app.snippets.Latest()
